@@ -6,9 +6,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecommerce/src/Constants/app_constants.dart';
 import 'package:ecommerce/src/Constants/colors.dart';
 import 'package:ecommerce/src/Widgets/my_app_bar.dart';
+import 'package:ecommerce/src/controllers/new_arrivals_controllers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:get/get.dart';
 
 class ProductDetails extends StatefulWidget {
   List? imagesurl = [];
@@ -35,22 +37,23 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  List? data = [];
-  String? dropdownValue;
+  // List? variantData = [];
+  // String? dropdownValue;
+  final _controller = Get.find<NewArrivalController>();
   @override
   Widget build(BuildContext context) {
-    debugPrint('[ProductDetails] Variants:' + widget.variant.toString());
-    if (widget.variant!.isNotEmpty) {
-      data!.clear();
-      for (var element in widget.variant!) {
-        data!.add(element.weight);
-        // logger.d(element.weight);
-      }
-    }
+    // debugPrint('[ProductDetails] Variants:' + widget.variant.toString());
+    // if (widget.variant!.isNotEmpty) {
+    //   variantData!.clear();
+    //   for (var element in widget.variant!) {
+    //     variantData!.add(element.weight);
+    //     // logger.d(element.weight);
+    //   }
+    // }
     // /*data!.isEmpty? dropdownValue:*/dropdownValue = data![0];
-    setState(() {
-      data!.isEmpty ? dropdownValue : dropdownValue = data![0];
-    });
+    // setState(() {
+    //   variantData!.isEmpty ? dropdownValue : dropdownValue = variantData![0];
+    // });
     return Scaffold(
       appBar: MyAppBar(),
       body: SingleChildScrollView(
@@ -149,32 +152,36 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         SizedBox(width: 4),
                         Container(
-                          padding: EdgeInsets.only(left: 3, right: 3),
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: AppColors.primaryappcolor),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          child: DropdownButton<dynamic>(
-                            value: dropdownValue,
-                            // hint: Text('\t Select \t'),
-                            onChanged: (newvalue) {
-                              setState(() {
-                                dropdownValue = newvalue;
-                                // dropdownValue;
-                                print(dropdownValue);
-                              });
-                            },
-                            items: data!.map<DropdownMenuItem<dynamic>>(
-                              (value) {
-                                return DropdownMenuItem<dynamic>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              },
-                            ).toList(),
-                          ),
-                        ),
+                            padding: EdgeInsets.only(left: 3, right: 3),
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: AppColors.primaryappcolor),
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            child: Obx(() {
+                              logger.d("[ProductDetails] wieghtData: " +
+                                  _controller.variantData.toString());
+                              return DropdownButton<dynamic>(
+                                value: _controller.weightData.value,
+                                // hint: Text('\t Select \t'),
+                                onChanged: (newvalue) {
+                                  _controller.updateWeight(newvalue);
+                                  // setState(() {
+                                  //   dropdownValue = newvalue;
+                                  //   // dropdownValue;
+                                  //   print(dropdownValue);
+                                  // });
+                                },
+                                items: _controller.variantData.map(
+                                  (selectedType) {
+                                    return DropdownMenuItem(
+                                      value: selectedType,
+                                      child: Text(selectedType),
+                                    );
+                                  },
+                                ).toList(),
+                              );
+                            })),
                       ],
                     ),
               SizedBox(height: 20),

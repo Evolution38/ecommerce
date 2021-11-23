@@ -9,123 +9,108 @@ import 'package:ecommerce/src/services/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NewArrivals extends StatefulWidget {
-  const NewArrivals({Key? key}) : super(key: key);
-
-  @override
-  _NewArrivalsState createState() => _NewArrivalsState();
-}
-
-class _NewArrivalsState extends State<NewArrivals> {
-  var data;
-  bool isloading = true;
-  newarrival() async {
-    var result = await HttpService.getNewArrival();
-    setState(() {
-      data = NewArrivalModel.fromJson(result);
-      logger.d("Data type" + data.runtimeType.toString());
-      isloading = false;
-      debugPrint("[NewArrivals] data: " + data.result[0].images[0].imgProduct);
-      debugPrint("[NewArrivals] data: " + data.result[0].name);
-      debugPrint("[NewArrivals] data: " + data.result[0].finalPrice);
-    });
-  }
-
-  // final newArivalsController = Get.put(NewArrivalController())
-
-  @override
-  void initState() {
-    newarrival();
-    super.initState();
-  }
+class NewArrivals extends StatelessWidget {
+  final newArivalsController = Get.put(NewArrivalController());
 
   @override
   Widget build(BuildContext context) {
-    return isloading
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : GridView.builder(
-            physics: const ScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: data.result.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2),
-            itemBuilder: (context, index) {
-              return SizedBox(
-                height: 500,
-                width: 300,
-                child: InkWell(
-                  onTap: () {
-                    // debugPrint("[NewArrivals] Data length of images:" +
-                    //     data.result[index].images.toString());
-                    debugPrint("[NewArrivals] Variant Length" +
-                        data.result[index].variant.length.toString());
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProductDetails(
-                          carousellength: data.result[index].images.length,
-                          discription: data.result[index].description,
-                          imagesurl: data.result[index].images,
-                          price: "Rs " +
-                              data.result[index].variant[0].actualPrice +
-                              ".00",
-                          productname: data.result[index].name,
-                          variant: data.result[index].variant,
-                          stock: 'Out of Stock',
-                          // weights: [
-                          //   data.result[index].variant[0].weight,
-                          //   // data.result[index].variant[1].weight
-                          // ],
+    return Obx(() {
+      if (newArivalsController.isLoading.value) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return GridView.builder(
+          physics: const ScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: newArivalsController.data.result!.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2),
+          itemBuilder: (context, index) {
+            return SizedBox(
+              height: 500,
+              width: 300,
+              child: InkWell(
+                onTap: () {
+                  newArivalsController.getProductID(
+                      newArivalsController.data.result![index].id!);
+                  // debugPrint("[NewArrivals] Data length of images:" +
+                  //     data.result[index].images.toString());
+                  debugPrint("[NewArrivals] Variant Length" +
+                      newArivalsController.data.result![index].variant!.length
+                          .toString());
+                  Get.to(
+                    () => ProductDetails(
+                      carousellength: newArivalsController
+                          .data.result![index].images!.length,
+                      discription:
+                          newArivalsController.data.result![index].description!,
+                      imagesurl:
+                          newArivalsController.data.result![index].images,
+                      price: "Rs " +
+                          newArivalsController
+                              .data.result![index].variant![0].actualPrice! +
+                          ".00",
+                      productname:
+                          newArivalsController.data.result![index].name!,
+                      variant: newArivalsController.data.result![index].variant,
+                      stock: 'Out of Stock',
+                      // weights: [
+                      //   data.result[index].variant[0].weight,
+                      //   // data.result[index].variant[1].weight
+                      // ],
+                    ),
+                  );
+                },
+                child: Card(
+                  elevation: 5.0,
+                  semanticContainer: true,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6)),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 6,
+                        child: CachedNetworkImage(
+                            imageUrl: newArivalsController
+                                .data.result![index].images![0].imgProduct!,
+                            fit: BoxFit.cover),
+                      ),
+                      Expanded(
+                        child: Text(
+                          newArivalsController.data.result![index].name!,
+                          style: TextStyle(
+                              height: MediaQuery.of(context).size.height / 350),
                         ),
                       ),
-                    );
-                  },
-                  child: Card(
-                    elevation: 5.0,
-                    semanticContainer: true,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6)),
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 6,
-                          child: CachedNetworkImage(
-                              imageUrl: data.result[index].images[0].imgProduct,
-                              fit: BoxFit.cover),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: 1,
+                        child: const DecoratedBox(
+                          decoration: BoxDecoration(color: Colors.black),
                         ),
-                        Expanded(
-                          child: Text(
-                            data.result[index].name,
-                            style: TextStyle(
-                                height:
-                                    MediaQuery.of(context).size.height / 350),
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: 1,
-                          child: const DecoratedBox(
-                            decoration: BoxDecoration(color: Colors.black),
-                          ),
-                        ),
-                        Text(
-                          "Rs " + data.result[index].actualPrice + ".00",
-                          style: TextStyle(
-                              height: MediaQuery.of(context).size.height / 500),
-                        )
-                      ],
-                    ),
+                      ),
+                      Text(
+                        "Rs " +
+                            newArivalsController
+                                .data.result![index].actualPrice! +
+                            ".00",
+                        style: TextStyle(
+                            height: MediaQuery.of(context).size.height / 500),
+                      )
+                    ],
                   ),
                 ),
-              );
-            },
-          );
+              ),
+            );
+          },
+        );
+      }
+    });
   }
 }

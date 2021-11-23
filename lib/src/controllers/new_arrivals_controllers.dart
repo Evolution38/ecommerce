@@ -5,7 +5,11 @@ import 'package:get/get.dart';
 
 class NewArrivalController extends GetxController {
   RxBool isLoading = true.obs;
-  NewArrivalModel? data;
+  var data = NewArrivalModel();
+
+  var variantData = [].obs;
+  var weightData = "WeightData".obs;
+  var newWeight = "newWeight".obs;
 
   @override
   void onInit() {
@@ -18,5 +22,27 @@ class NewArrivalController extends GetxController {
     data = NewArrivalModel.fromJson(result);
     isLoading(false);
     logger.d("[NewArrivalsController] data: " + data.toString());
+  }
+
+  void getProductID(String id) {
+    for (var i in data.result!) {
+      if (i.id == id) {
+        if (i.variant!.isNotEmpty) {
+          variantData.clear();
+          for (var element in i.variant!) {
+            variantData.add(element.weight);
+            logger.d("[NewArivalController] " + variantData.toString());
+          }
+          // logger.d('[NewArrivalsController] weightdata: ' + weightData.value);
+        }
+        // variantData.isEmpty ? weightData.value : newWeight.value = variantData[0];
+        // /*data!.isEmpty? dropdownValue:*/dropdownValue = data![0];
+      }
+    }
+  }
+
+  void updateWeight(String value) {
+    weightData.value = value;
+    logger.d('[NewArrivalsController] weightdata: ' + weightData.value);
   }
 }
