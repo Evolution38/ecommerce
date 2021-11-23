@@ -81,7 +81,7 @@ class _RandomCardState extends State<RandomCard> {
                                                 .products[i]
                                                 .images
                                                 .length,
-                                            discription: randomcategory
+                                            description: randomcategory
                                                 .result[index]
                                                 .products[i]
                                                 .description,

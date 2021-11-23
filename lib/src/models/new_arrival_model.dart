@@ -4,54 +4,63 @@
 
 import 'dart:convert';
 
-NewArrivalModel newArrivalModelFromJson(String str) => NewArrivalModel.fromJson(json.decode(str));
+import 'package:equatable/equatable.dart';
 
-String newArrivalModelToJson(NewArrivalModel data) => json.encode(data.toJson());
+NewArrivalModel newArrivalModelFromJson(String str) =>
+    NewArrivalModel.fromJson(json.decode(str));
 
-class NewArrivalModel {
-    NewArrivalModel({
-        this.result,
-    });
+String newArrivalModelToJson(NewArrivalModel data) =>
+    json.encode(data.toJson());
 
-    List<Result>? result;
+class NewArrivalModel extends Equatable {
+  const NewArrivalModel({
+    this.result,
+  });
 
-    factory NewArrivalModel.fromJson(Map<String, dynamic> json) => NewArrivalModel(
-        result: List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
-    );
+  final List<Result>? result;
 
-    Map<String, dynamic> toJson() => {
+  factory NewArrivalModel.fromJson(Map<String, dynamic> json) =>
+      NewArrivalModel(
+        result:
+            List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
         "result": List<dynamic>.from(result!.map((x) => x.toJson())),
-    };
+      };
+
+  @override
+  List<Object?> get props => [result];
 }
 
-class Result {
-    Result({
-        this.id,
-        this.name,
-        this.categoryName,
-        this.finalPrice,
-        this.actualPrice,
-        this.discount,
-        this.qty,
-        this.description,
-        this.images,
-        this.variant,
-        this.color,
-    });
+class Result extends Equatable {
+  const Result({
+    this.id,
+    this.name,
+    this.categoryName,
+    this.finalPrice,
+    this.actualPrice,
+    this.discount,
+    this.qty,
+    this.description,
+    this.images,
+    this.variant,
+    this.color,
+  });
 
-    String? id;
-    String? name;
-    dynamic categoryName;
-    String? finalPrice;
-    String? actualPrice;
-    String? discount;
-    String? qty;
-    String? description;
-    List<Image>? images;
-    List<Variant>? variant;
-    List<dynamic>? color;
+  final String? id;
+  final String? name;
+  final String? categoryName;
+  final String? finalPrice;
+  final String? actualPrice;
+  final String? discount;
+  final String? qty;
+  final String? description;
+  final List<Image>? images;
+  final List<Variant>? variant;
+  final List<dynamic>? color;
 
-    factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
         id: json["ID"],
         name: json["name"],
         categoryName: json["category_name"],
@@ -61,11 +70,12 @@ class Result {
         qty: json["qty"],
         description: json["description"],
         images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
-        variant: List<Variant>.from(json["variant"].map((x) => Variant.fromJson(x))),
+        variant:
+            List<Variant>.from(json["variant"].map((x) => Variant.fromJson(x))),
         color: List<dynamic>.from(json["color"].map((x) => x)),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "ID": id,
         "name": name,
         "category_name": categoryName,
@@ -77,52 +87,69 @@ class Result {
         "images": List<dynamic>.from(images!.map((x) => x.toJson())),
         "variant": List<dynamic>.from(variant!.map((x) => x.toJson())),
         "color": List<dynamic>.from(color!.map((x) => x)),
-    };
+      };
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        categoryName,
+        finalPrice,
+        actualPrice,
+        discount,
+        qty,
+        description,
+        images,
+        variant,
+        color
+      ];
 }
 
-class Image {
-  
-    Image({
-        this.imgId,
-        this.imgProduct,
-    });
+class Image extends Equatable {
+  const Image({
+    this.imgId,
+    this.imgProduct,
+  });
 
-    String? imgId;
-    String? imgProduct;
+  final String? imgId;
+  final String? imgProduct;
 
-    factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory Image.fromJson(Map<String, dynamic> json) => Image(
         imgId: json["img_id"],
         imgProduct: json["img_product"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "img_id": imgId,
         "img_product": imgProduct,
-    };
+      };
+
+  @override
+  List<Object?> get props => [imgId, imgProduct];
 }
 
-class Variant {
-    Variant({
-        this.id,
-        this.weight,
-        this.quantity,
-        this.discount,
-        this.finalPrice,
-        this.actualPrice,
-        this.productId,
-        this.color,
-    });
+class Variant extends Equatable {
+  const Variant({
+    this.id,
+    this.weight,
+    this.quantity,
+    this.discount,
+    this.finalPrice,
+    this.actualPrice,
+    this.productId,
+    this.color,
+  });
 
-    String? id;
-    String? weight;
-    String? quantity;
-    String? discount;
-    String? finalPrice;
-    String? actualPrice;
-    String? productId;
-    List<dynamic>? color;
+  final String? id;
+  final String? weight;
+  final String? quantity;
+  final String? discount;
+  final String? finalPrice;
+  final String? actualPrice;
+  final String? productId;
+  final List<dynamic>? color;
 
-    factory Variant.fromJson(Map<String, dynamic> json) => Variant(
+  factory Variant.fromJson(Map<String, dynamic> json) => Variant(
         id: json["ID"],
         weight: json["weight"],
         quantity: json["quantity"],
@@ -131,9 +158,9 @@ class Variant {
         actualPrice: json["actual_price"],
         productId: json["product_id"],
         color: List<dynamic>.from(json["color"].map((x) => x)),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "ID": id,
         "weight": weight,
         "quantity": quantity,
@@ -142,6 +169,17 @@ class Variant {
         "actual_price": actualPrice,
         "product_id": productId,
         "color": List<dynamic>.from(color!.map((x) => x)),
-    };
-}
+      };
 
+  @override
+  List<Object?> get props => [
+        id,
+        weight,
+        quantity,
+        discount,
+        finalPrice,
+        actualPrice,
+        productId,
+        color
+      ];
+}

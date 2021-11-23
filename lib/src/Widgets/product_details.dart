@@ -12,13 +12,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 
-class ProductDetails extends StatefulWidget {
+class ProductDetails extends StatelessWidget {
   List? imagesurl = [];
   String price;
   List? variant;
   String productname;
   String stock;
-  String discription;
+  String description;
   int? carousellength;
 
   ProductDetails(
@@ -28,32 +28,12 @@ class ProductDetails extends StatefulWidget {
       this.variant,
       this.productname = '',
       this.stock = '',
-      this.discription = '',
+      this.description = '',
       this.carousellength})
       : super(key: key);
-
-  @override
-  State<ProductDetails> createState() => _ProductDetailsState();
-}
-
-class _ProductDetailsState extends State<ProductDetails> {
-  // List? variantData = [];
-  // String? dropdownValue;
   final _controller = Get.find<NewArrivalController>();
   @override
   Widget build(BuildContext context) {
-    // debugPrint('[ProductDetails] Variants:' + widget.variant.toString());
-    // if (widget.variant!.isNotEmpty) {
-    //   variantData!.clear();
-    //   for (var element in widget.variant!) {
-    //     variantData!.add(element.weight);
-    //     // logger.d(element.weight);
-    //   }
-    // }
-    // /*data!.isEmpty? dropdownValue:*/dropdownValue = data![0];
-    // setState(() {
-    //   variantData!.isEmpty ? dropdownValue : dropdownValue = variantData![0];
-    // });
     return Scaffold(
       appBar: MyAppBar(),
       body: SingleChildScrollView(
@@ -68,7 +48,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 height: MediaQuery.of(context).size.height * 0.3,
                 width: double.infinity,
                 child: CarouselSlider.builder(
-                  itemCount: /*1*/ widget.carousellength,
+                  itemCount: /*1*/ carousellength,
                   itemBuilder:
                       (BuildContext context, int index, int pageViewIndex) {
                     // debugPrint("[ProductDetails] imagesUrl: " +
@@ -82,7 +62,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         image: DecorationImage(
                           image: CachedNetworkImageProvider(
                               /*'https://static.toiimg.com/photo/75503656.cms'*/
-                              widget.imagesurl![index].imgProduct),
+                              imagesurl![index].imgProduct),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -111,7 +91,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   //Showing Product Name
                   Expanded(
                     child: Text(
-                      widget.productname,
+                      productname,
                       style: TextStyle(
                         fontSize: 20,
                       ),
@@ -120,7 +100,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(width: 50),
                   //Showing the stock
                   Text(
-                    widget.stock,
+                    stock,
                     style: TextStyle(
                         fontSize: 15,
                         color: Colors.red,
@@ -133,14 +113,14 @@ class _ProductDetailsState extends State<ProductDetails> {
               //**Price of Product----------------------------------------------
 
               Text(
-                widget.price,
+                price,
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
 
               //**Product Variants use to show the size or quantity-------------
               //**Checking the Variants in API-----------------------------------
-              widget.variant!.isEmpty
+              variant!.isEmpty
                   ? SizedBox.shrink()
                   : Row(
                       children: [
@@ -152,25 +132,20 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ),
                         SizedBox(width: 4),
                         Container(
-                            padding: EdgeInsets.only(left: 3, right: 3),
-                            decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: AppColors.primaryappcolor),
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            child: Obx(() {
+                          padding: EdgeInsets.only(left: 3, right: 3),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: AppColors.primaryappcolor),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Obx(
+                            () {
                               logger.d("[ProductDetails] wieghtData: " +
                                   _controller.variantData.toString());
                               return DropdownButton<dynamic>(
                                 value: _controller.weightData.value,
-                                // hint: Text('\t Select \t'),
                                 onChanged: (newvalue) {
                                   _controller.updateWeight(newvalue);
-                                  // setState(() {
-                                  //   dropdownValue = newvalue;
-                                  //   // dropdownValue;
-                                  //   print(dropdownValue);
-                                  // });
                                 },
                                 items: _controller.variantData.map(
                                   (selectedType) {
@@ -181,7 +156,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   },
                                 ).toList(),
                               );
-                            })),
+                            },
+                          ),
+                        ),
                       ],
                     ),
               SizedBox(height: 20),
@@ -244,7 +221,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 // height: MediaQuery.of(context).size.width,
                 width: double.infinity,
                 child: Html(
-                  data: widget.discription,
+                  data: description,
                 ),
               ),
             ],

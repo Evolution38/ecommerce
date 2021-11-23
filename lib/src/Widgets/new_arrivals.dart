@@ -43,7 +43,7 @@ class NewArrivals extends StatelessWidget {
                     () => ProductDetails(
                       carousellength: newArivalsController
                           .data.result![index].images!.length,
-                      discription:
+                      description:
                           newArivalsController.data.result![index].description!,
                       imagesurl:
                           newArivalsController.data.result![index].images,
