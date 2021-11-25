@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, use_key_in_widget_constructors
 
 import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:ecommerce/src/Constants/app_constants.dart';
@@ -34,9 +34,11 @@ class NewArrivals extends StatelessWidget {
                 onTap: () {
                   newArivalsController.getProductID(
                       newArivalsController.data.result![index].id!);
-                  for (var i = 0;i <newArivalsController.data.result![index].variant!.length; i++) {
+                  for (var i = 0; i <newArivalsController.data.result![index].variant!.length;i++) {
                     newArivalsController.updatePrice(newArivalsController
                         .data.result![index].variant![i].id!);
+                    newArivalsController.updateQuantity(
+                      newArivalsController.data.result![index].variant![i].id!);
                   }
 
                   // debugPrint("[NewArrivals] Data length of images:" +
@@ -45,6 +47,7 @@ class NewArrivals extends StatelessWidget {
                       newArivalsController.data.result![index].variant!.length
                           .toString());
                   Get.to(
+
                     () => ProductDetails(
                       carousellength: newArivalsController
                           .data.result![index].images!.length,
@@ -54,12 +57,11 @@ class NewArrivals extends StatelessWidget {
                           newArivalsController.data.result![index].images,
                       price: "Rs " +
                           newArivalsController
-                              .data.result![index].variant![0].actualPrice! +
+                              .data.result![index].actualPrice!+
                           ".00",
                       productname:
                           newArivalsController.data.result![index].name!,
-                      variant: newArivalsController.data.result![index].variant,
-                      stock: 'Out of Stock',
+                      stock: newArivalsController.data.result![index].qty!,
                       // weights: [
                       //   data.result[index].variant[0].weight,
                       //   // data.result[index].variant[1].weight

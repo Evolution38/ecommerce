@@ -3,7 +3,6 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ecommerce/src/Constants/app_constants.dart';
 import 'package:ecommerce/src/Constants/colors.dart';
 import 'package:ecommerce/src/Widgets/my_app_bar.dart';
 import 'package:ecommerce/src/controllers/new_arrivals_controllers.dart';
@@ -32,6 +31,7 @@ class ProductDetails extends StatelessWidget {
       this.carousellength})
       : super(key: key);
   final _controller = Get.find<NewArrivalController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,12 +99,18 @@ class ProductDetails extends StatelessWidget {
                   ),
                   SizedBox(width: 50),
                   //Showing the stock
-                  Text(
-                    stock,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w600),
+                  Obx(
+                    () {
+                      return Text(
+                        _controller.variantData.isEmpty
+                            ? stock
+                            : _controller.quantity.value,
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -112,17 +118,19 @@ class ProductDetails extends StatelessWidget {
 
               //**Price of Product----------------------------------------------
 
-              Obx((){
+              Obx(() {
                 return Text(
-                _controller.price.value,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              );
+                  _controller.variantData.isEmpty
+                      ? price
+                      : "Rs " + _controller.price.value + ".00",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                );
               }),
               const SizedBox(height: 10),
 
               //**Product Variants use to show the size or quantity-------------
               //**Checking the Variants in API-----------------------------------
-              variant!.isEmpty
+              _controller.variantData.isEmpty
                   ? SizedBox.shrink()
                   : Row(
                       children: [
@@ -142,9 +150,9 @@ class ProductDetails extends StatelessWidget {
                           ),
                           child: Obx(
                             () {
-                              logger.d("[ProductDetails] wieghtData: " +
-                                  _controller.variantData.toString());
-                              logger.d("[ProductDetails] Price " +_controller.price.value);
+                              // logger.d("[ProductDetails] wieghtData: " +
+                              //     _controller.variantData.toString());
+                              // logger.d("[ProductDetails] Price " +_controller.price.value);
                               return DropdownButton<dynamic>(
                                 value: _controller.weightData.value,
                                 onChanged: (newvalue) {
