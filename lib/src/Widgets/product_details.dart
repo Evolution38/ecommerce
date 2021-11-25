@@ -112,10 +112,12 @@ class ProductDetails extends StatelessWidget {
 
               //**Price of Product----------------------------------------------
 
-              Text(
-                price,
+              Obx((){
+                return Text(
+                _controller.price.value,
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
+              );
+              }),
               const SizedBox(height: 10),
 
               //**Product Variants use to show the size or quantity-------------
@@ -142,6 +144,7 @@ class ProductDetails extends StatelessWidget {
                             () {
                               logger.d("[ProductDetails] wieghtData: " +
                                   _controller.variantData.toString());
+                              logger.d("[ProductDetails] Price " +_controller.price.value);
                               return DropdownButton<dynamic>(
                                 value: _controller.weightData.value,
                                 onChanged: (newvalue) {

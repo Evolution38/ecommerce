@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce/src/Constants/app_constants.dart';
+// import 'package:ecommerce/src/Constants/app_constants.dart';
 import 'package:ecommerce/src/Widgets/product_details.dart';
 import 'package:ecommerce/src/controllers/new_arrivals_controllers.dart';
-import 'package:ecommerce/src/models/new_arrival_model.dart';
-import 'package:ecommerce/src/services/http_service.dart';
+// import 'package:ecommerce/src/models/new_arrival_model.dart';
+// import 'package:ecommerce/src/services/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,6 +34,11 @@ class NewArrivals extends StatelessWidget {
                 onTap: () {
                   newArivalsController.getProductID(
                       newArivalsController.data.result![index].id!);
+                  for (var i = 0;i <newArivalsController.data.result![index].variant!.length; i++) {
+                    newArivalsController.updatePrice(newArivalsController
+                        .data.result![index].variant![i].id!);
+                  }
+
                   // debugPrint("[NewArrivals] Data length of images:" +
                   //     data.result[index].images.toString());
                   debugPrint("[NewArrivals] Variant Length" +
